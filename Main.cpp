@@ -361,6 +361,32 @@ void add(int number, TreeNode* &root){
   }
 }
 
+// print a binary search tree, using printRow
+void printTree(TreeNode* root)
+ {
+      int array[1000];
+      int colorArray[1000];
+      // initialize the array
+      for (int i = 0; i < 1000; i++){
+      array[i] = -999;  // represent a null node
+      colorArray[i] = -999;
+      }
+      // put the tree node value into the array
+      getPrintList(root, 0, array, colorArray);
+
+      int height = getHeight(root);
+      //      cout << "Tree height: " << height << endl;
+
+      int cnt=1;
+      //print a tree with doubling rows
+      for (int i = 0 ; i < height; i ++) {
+
+        printRow(array, colorArray, cnt);
+        cnt = cnt * 2;
+      }
+
+  }
+
 
 
 //Prints a list with parent color and value
@@ -420,32 +446,6 @@ void printList(TreeNode* root){
     }
   }
 }
-
-// print a binary search tree, using printRow
-void printTree(TreeNode* root)
- {
-      int array[1000];
-      int colorArray[1000];
-      // initialize the array
-      for (int i = 0; i < 1000; i++){
-      array[i] = -999;  // represent a null node
-      colorArray[i] = -999;
-      }
-      // put the tree node value into the array
-      getPrintList(root, 0, array, colorArray);
-      
-      int height = getHeight(root);
-      //      cout << "Tree height: " << height << endl;
-      
-      int cnt=1;
-      //print a tree with doubling rows
-      for (int i = 0 ; i < height; i ++) {
-	
-	printRow(array, colorArray, cnt);
-	cnt = cnt * 2; 
-      }
-      
-  }
 
 // get height of tree
 int getHeight(TreeNode* root)

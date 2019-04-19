@@ -5,6 +5,8 @@
 
 using namespace std;
 
+
+//JUSTIN HE
 //Class for TreeNode
 
 TreeNode::TreeNode(){
@@ -19,10 +21,6 @@ TreeNode::TreeNode(){
 
 TreeNode::~TreeNode(){
   
-}
-
-int TreeNode::getColor(){
-  return color;
 }
 
 void TreeNode::setColor( int newColor){
@@ -47,6 +45,11 @@ TreeNode* TreeNode::getRight(){
 int TreeNode::getValue(){
   return value;
 }
+
+int TreeNode::getColor(){
+  return color;
+}
+
 
 void TreeNode::setValue(int newvalue){
   value = newvalue;

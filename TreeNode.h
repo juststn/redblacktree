@@ -3,6 +3,8 @@
 #ifndef TREENODE_H
 #define TREENODE_H
 
+
+//JUSTIN HE
 //Definitions for TreeNode
 
 class TreeNode{
@@ -14,18 +16,18 @@ class TreeNode{
 
   void setLeft(TreeNode* newLeft);
   void setRight(TreeNode* newRight);
-  int getValue();
   void setValue(int newvalue);
   void setParent(TreeNode* newParent);
   TreeNode* getParent();
+  int getValue();
   int getColor();
   void setColor(int newColor);
  private:
   
   TreeNode* left;
   TreeNode* right;
-  int value;
   TreeNode* parent;
+  int value;
   int color;
 };
 
