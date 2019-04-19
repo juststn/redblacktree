@@ -16,11 +16,18 @@ using namespace std;
 /*
 Justin He 
 Period 2
-Red-Black Tree: binary search tree with red-black color to balance the tree
+Red-Black Tree: This program is an implementation of a red-black tree. 
+It will ask to read in a file on startup, if a file name is provided
+then it will create a tree with the data, else single numbers can be added using
+the add command. 
+the print command can be used to print a visual of the red-black tree.
+The printlist command prints out the number, red/black value, and parents.
+"exit" exits the program.
 */
 
-void rotateTree(TreeNode* &current);
+//function prototypes
 void addToTree(int number, TreeNode* &root);
+void rotateTree(TreeNode* &current);
 void printTree(TreeNode* root);
 void getPrintList(TreeNode* root, int k, int array[1000], int colorArray[1000]);
 void printRow(int array[1000], int height, int depth, int cnt);
@@ -30,6 +37,7 @@ void printRow1(int array[1000], int colorArray[1000], int cnt);
 void rotateLeft(TreeNode* &current);
 void rotateRight(TreeNode* &current);
 void printList(TreeNode* root);
+
 
 int main(){
   char array[5000] = "";
@@ -87,7 +95,7 @@ int main(){
   int  value;
   int loop=1;
   while (loop ==1) {
-    cout << endl << "Enter command (add, print, listprint, exit):" << endl << "(\"listprint\" is for value/color/parent details, \"print\" is treelike)" << endl;
+    cout << endl << "Enter command (add, print, printlist, exit):" << endl << "(\"printlist\" contains value/color/parent details, \"print\" is treelike)" << endl;
     cin >> input;
 
     if (!strcmp(input, (char*)"print")) {
@@ -95,11 +103,11 @@ int main(){
       printTree(root);
     }
 
-    if (!strcmp(input, (char*)"listprint")){
+    if (!strcmp(input, (char*)"printlist")){
       printList(root);
     }
     if (!strcmp(input, (char*)"add")) {
-      cout << "Enter a number to add to tree:" << endl;
+      cout << "Enter a number to add to tree (up to 3 digits):" << endl;
       cin >> value;
       addToTree(value, root);
     }
@@ -111,7 +119,7 @@ int main(){
   }
 }
 
-//Shifts and recolors the tree so that the conditions for a red black tree are met
+//Shifts and recolors the tree to fit the conditions for the red black tree
 void rotateTree(TreeNode* &current){
 
   if (current->getParent() == NULL)
@@ -123,17 +131,17 @@ void rotateTree(TreeNode* &current){
   //Get color of uncle
   TreeNode* temp = current->getParent()->getParent();
   
-  //No grandparent, set parent to black
+  //If no grandparent, set parent to black
   if(temp == NULL){
     current->getParent()->setColor(1);
     return;
   }
 
-  //Uncle is the left child of grandparent
+  //If uncle is the left child of grandparent
   if(temp->getRight() == current->getParent() && temp->getLeft() != NULL){
     int uncleColor = temp->getLeft()->getColor();
 
-    //Uncle is red, recolor parent and uncle to black
+    //If uncle is red, recolor parent and uncle to black
     if(uncleColor == 0){
       current->getParent()->setColor(1);
       temp->getLeft()->setColor(1);
@@ -283,7 +291,7 @@ void rotateLeft(TreeNode* &current) {
 
 }
 
-//Add
+//Adding new values to tree
 void addToTree(int number, TreeNode* &root){
 
   //Add new node with value of number to the tree
@@ -456,7 +464,7 @@ void getPrintList(TreeNode* root, int k, int array[1000], int colorArray[1000])
   getPrintList(root->getRight(), k*2+2, array, colorArray);
 }
 
-// print a row
+// print a row of the tree
 void printRow1(int array[1000], int colorArray[1000], int cnt)
 {
   int startIndex = cnt-1;

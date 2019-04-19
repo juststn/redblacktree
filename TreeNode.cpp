@@ -5,14 +5,15 @@
 
 using namespace std;
 
+//Class for TreeNode
 
 TreeNode::TreeNode(){
   left = NULL;
   right = NULL;
   parent = NULL;
   color = 0;
-  //0 Is red
-  //1 is black
+  //0 = red
+  //1 = black
 }
 
 
