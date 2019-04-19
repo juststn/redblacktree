@@ -18,10 +18,9 @@ using namespace std;
 Justin He 
 Period 2
 Red-Black Tree: This program is an implementation of a red-black tree. 
-It will ask to read in a file on startup, if a file name is provided
-then it will create a tree with the data, else single numbers can be added using
-the add command. 
-the print command can be used to print a visual of the red-black tree.
+It will ask to read in a file on startup, if a file name is provided then it will create a tree (if data separated by commas/space). 
+Single numbers can be added using the add command. 
+The print command can be used to print a visual of the red-black tree.
 The printlist command prints out the number, red/black value, and parents.
 "exit" exits the program.
 */
@@ -31,26 +30,28 @@ void add(int number, TreeNode* &root);
 void rotateTree(TreeNode* &current);
 void printTree(TreeNode* root);
 void getPrintList(TreeNode* root, int k, int array[1000], int colorArray[1000]);
-void printRow(int array[1000], int height, int depth, int cnt);
 int  getHeight(TreeNode* root);
 void printBinary(TreeNode* root, int numberOfSpace);
-void printRow1(int array[1000], int colorArray[1000], int cnt);
+void printRow(int array[1000], int colorArray[1000], int cnt);
 void rotateLeft(TreeNode* &node);
 void rotateRight(TreeNode* &node);
 void printList(TreeNode* root);
 
 
 int main(){
-  char array[5000] = "";
-  char token[100] = "";
+
+  //initialize variables
+  char array[999] = "";
+  char token[99] = "";
   int arrayLength = 0;
   int layer = 0;
-  TreeNode* root = NULL;
-  char filename[200] ="";
-  char in[200] =""; 
+   char in[200] ="";
   ifstream infile;
   int  hasFile =0;
-  
+
+  TreeNode* root = NULL;
+  char filename[200] ="";
+   
   // get file name, and read the first line from the file
   cout<< "Read in a file (yes, no)?"<<endl;
   cin.getline(in, 200);
@@ -62,14 +63,16 @@ int main(){
       infile.getline(array, 5000);
       infile.close();
 
+ 
       hasFile =1;
     }
   else
     {
-      cout << "can not open the input file. " << endl;
+      cout << "Unable open the input file. " << endl;
     }
   }
-  
+
+  //if a file is present then read it (separated by spaces/commas)
   if (hasFile ==1) {
   // parse the line with list of numbers
   arrayLength = strlen(array);
@@ -92,13 +95,15 @@ int main(){
 
   }
   
-  char input[100]="";
+  char input[10]="";
   int  value;
-  int loop=1;
-  while (loop ==1) {
-    cout << endl << "Enter command (add, print, printlist, exit):" << endl << "(\"printlist\" contains value/color/parent details, \"print\" is treelike)" << endl;
+  int looping=1;
+  while (looping ==1) {
+    //prompt input
+    cout << endl << "Enter command (add, print, printlist, exit):" << endl << "(\"printlist\" displays parent/value/R or B, for each node, \"print\" outputs a visual tree.)" << endl;
     cin >> input;
 
+    //compare strings to look for words
     if (!strcmp(input, (char*)"print")) {
       //printBinary(root, 0);
       printTree(root);
@@ -114,7 +119,7 @@ int main(){
     }
     
     if (!strcmp(input, (char*)"exit")) {
-      loop = 0;
+      looping = 0;
     }
     cin.clear();
   }
@@ -123,13 +128,15 @@ int main(){
 //Shifts and recolors the tree to fit the conditions for the red black tree
 void rotateTree(TreeNode* &current){
 
-  if (current->getParent() == NULL)
+  if (current->getParent() == NULL){
     return;
+  }
 
-  if (current->getParent()->getColor() == 1)
+  if (current->getParent()->getColor() == 1){
     return;
+  }
   
-  //Get color of uncle
+  //Get color of uncle (0 is red 1 is black)
   TreeNode* temp = current->getParent()->getParent();
   
   //If no grandparent, set parent to black
@@ -164,11 +171,11 @@ void rotateTree(TreeNode* &current){
   }
     
   
-  //Uncle is the right child of grandparent
+  //If the uncle is the right child of grandparent
   if(temp->getLeft() == current->getParent() && temp->getRight() != NULL){
     int uncleColor = temp->getRight()->getColor();
 
-    //Uncle red, recolor parent and uncle to black
+    //If color is red, recolor parent and uncle to black
     if(uncleColor == 0){
       current->getParent()->setColor(1);
       temp->getRight()->setColor(1);
@@ -178,13 +185,13 @@ void rotateTree(TreeNode* &current){
       }
     }
     else{
-      //rotate Right
+      //rotate node Right
       rotateRight(current);
     }
     return;
   }
   
-  // if has no uncle as right child of grandparent
+  // if has no uncle as right child of grandparent rotate right
   if (temp->getLeft() == current->getParent() && temp->getRight() == NULL) {
     rotateRight(current);
     return; 
@@ -192,11 +199,13 @@ void rotateTree(TreeNode* &current){
     
 }
 
-// rotate tree to right, uncle is on right side of grandparent
+// rotate tree to right
 void rotateRight(TreeNode* &node) {
 
   // if the current node is a right child, rotate it to be left child
   if (node == node->getParent()->getRight()) {
+
+    //get parent sibling, grandpa
     TreeNode* p =node->getParent();
     TreeNode* t2 =node->getLeft();
     TreeNode* g = node->getParent()->getParent();
@@ -206,7 +215,8 @@ void rotateRight(TreeNode* &node) {
     p->setRight(t2);
     node->setParent(g);
     p->setParent(node);
-    
+
+    //if there is no sibling set one
     if(t2 != NULL){
       
     t2->setParent(p);
@@ -216,7 +226,7 @@ void rotateRight(TreeNode* &node) {
     node = p;
   }
   
-  // once the current node is left child
+  // If the current node is left child
   if (node == node->getParent()->getLeft()) {
     
     //Nodes are parent grandparent uncle
@@ -294,10 +304,10 @@ void rotateLeft(TreeNode* &node) {
 
 }
 
-//Adding new values to tree
+//Adding new values to the tree
 void add(int number, TreeNode* &root){
 
-  //Add new node with value of number to the tree
+  //Add new node with value to the tree
   if (root == NULL){
     TreeNode* newNode = new TreeNode;
     newNode->setValue(number);
@@ -307,7 +317,7 @@ void add(int number, TreeNode* &root){
   }
   else{
     if(number > root->getValue()){
-      //Root has no right child
+      //If root has no right child
       if(root->getRight() == NULL){
 	
 	TreeNode* newNode = new TreeNode;
@@ -320,7 +330,7 @@ void add(int number, TreeNode* &root){
 	}
 	return;
 	}
-      //Recursive call to add to right subtree using temporary variable
+      //Use recursive call to add to right subtree using temporary variable
       else{
 	TreeNode* temp = root->getRight();
 	add(number, temp);
@@ -328,7 +338,7 @@ void add(int number, TreeNode* &root){
       return;
     }
     if(number <= root->getValue()){
-      //Root has no left child
+      //If the root has no left child
       if(root->getLeft() == NULL){
 	  TreeNode* newNode = new TreeNode;
 	  newNode->setValue(number);
@@ -356,52 +366,52 @@ void add(int number, TreeNode* &root){
 //Prints a list with parent color and value
 void printList(TreeNode* root){
   if(root == NULL){
-    cout << "NULL;" << endl;
+    cout << "NULL; NO TREE" << endl;
   }
   else{
-    //VALUE  
-    cout << "Value: " << root->getValue() << "; ";
+    //Display VALUE  
+    cout << "Value: " << root->getValue() << ", ";
 
     //COLOR
     if(root->getColor() == 0){
-      cout << "Color: " << "R; ";
+      cout << "Color: " << "R, ";
     }
     else{
-      cout << "Color: " << "B; ";
+      cout << "Color: " << "B, ";
     }
 
     //PARENT
     if(root->getParent() != NULL){
-      cout << "Parent: " << root->getParent()->getValue() << "; ";
+      cout << "Parent: " << root->getParent()->getValue() << ", ";
     }
     else{
-      cout << "Parent: " << "NULL; " << "IS " << "ROOT; ";
-    }
+      cout << "Parent: " << "NULL (Root), ";
+    }    
 
     //LEFT OR RIGHT CHILD
     if(root->getParent() != NULL && root->getParent()->getLeft() == root){
-      cout << "Is Left/Right Child: " << "Left;";
+      cout << "Left/Right Child: " << "Left,";
     }
     if(root->getParent() != NULL && root->getParent()->getRight() == root){
-      cout << "Is Left/Right Child: " << "Right;";
+      cout << "Left/Right Child: " << "Right,";
     }
 
     //CHILDREN
     if(root->getLeft() != NULL){
-      cout << " Left Child: " << root->getLeft()->getValue() << ";";
+      cout << " Left Child: " << root->getLeft()->getValue() << ",";
     }
     else{
-      cout << " Left Child: " << "NULL; ";
+      cout << " Left Child: " << "NULL, ";
     }
 
     if(root->getRight() != NULL){
       cout << " Right Child: " << root->getRight()->getValue() << endl << endl;
     }
     else{
-      cout << " Right Child: " << "NULL" << endl << endl;
+      cout << " Right Child: " << "NULL," << endl << endl;
     }
 
-    //RECURSIVE
+    //Recursively call
     if(root->getLeft() != NULL){
       printList(root->getLeft());
     }
@@ -411,14 +421,14 @@ void printList(TreeNode* root){
   }
 }
 
-// print a binary search tree, row by row
+// print a binary search tree, using printRow
 void printTree(TreeNode* root)
  {
       int array[1000];
       int colorArray[1000];
       // initialize the array
       for (int i = 0; i < 1000; i++){
-      array[i] = -999;  // -999 represent null tree node
+      array[i] = -999;  // represent a null node
       colorArray[i] = -999;
       }
       // put the tree node value into the array
@@ -428,11 +438,13 @@ void printTree(TreeNode* root)
       //      cout << "Tree height: " << height << endl;
       
       int cnt=1;
+      //print a tree with doubling rows
       for (int i = 0 ; i < height; i ++) {
-	// printRow(array, height, i, cnt);
-	printRow1(array, colorArray, cnt);
+	
+	printRow(array, colorArray, cnt);
 	cnt = cnt * 2; 
       }
+      
   }
 
 // get height of tree
@@ -442,20 +454,20 @@ int getHeight(TreeNode* root)
     return 0;
   }
 
-  int righth, lefth;
-  righth = getHeight(root->getRight());
-  lefth = getHeight(root->getLeft());
+  int heightR, heightL;
+  heightR = getHeight(root->getRight());
+  heightL = getHeight(root->getLeft());
 
-  if (righth > lefth) {
-    return righth +1;
+  if (heightR > heightL) {
+    return heightR +1;
   }
   else
     {
-      return lefth+1;
+      return heightL+1;
     }
 }
 
-// get the tree into an array for printing
+// fit the tree into an array for printing
 void getPrintList(TreeNode* root, int k, int array[1000], int colorArray[1000])
 {
   if (root == NULL)
@@ -468,7 +480,7 @@ void getPrintList(TreeNode* root, int k, int array[1000], int colorArray[1000])
 }
 
 // print a row of the tree
-void printRow1(int array[1000], int colorArray[1000], int cnt)
+void printRow(int array[1000], int colorArray[1000], int cnt)
 {
   int startIndex = cnt-1;
   int endIndex = startIndex + cnt;
